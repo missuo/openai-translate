@@ -59,7 +59,7 @@ docker run -itd -p 23333:23333 -e OPENAI_KEY=YOUR_API_KEY ghcr.io/missuo/openai-
 ```python
 import httpx, json
 
-deeplx_api = "http://127.0.0.1:23333/translate"
+openai_api = "http://127.0.0.1:23333/translate"
 
 data = {
 	"text": "Hello World",
@@ -68,7 +68,7 @@ data = {
 }
 
 post_data = json.dumps(data)
-r = httpx.post(url = deeplx_api, data = post_data).text
+r = httpx.post(url = openai_api, data = post_data).text
 print(r)
 ```
 
