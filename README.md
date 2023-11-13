@@ -11,7 +11,7 @@
 [3]: https://goreportcard.com/badge/github.com/missuo/openai-translate
 [4]: https://api.codeclimate.com/v1/badges/b5b30239174fc6603aca/maintainability
 [5]: https://img.shields.io/github/license/missuo/openai-translate
-[6]: https://img.shields.io/docker/pulls/missuo/deeplx?logo=docker
+[6]: https://img.shields.io/docker/pulls/missuo/openai-translate?logo=docker
 [7]: https://img.shields.io/github/v/release/missuo/openai-translate?logo=smartthings
 
 ## Features
