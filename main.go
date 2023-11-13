@@ -2,24 +2,25 @@
  * @Author: Vincent Young
  * @Date: 2023-11-13 11:16:26
  * @LastEditors: Vincent Young
- * @LastEditTime: 2023-11-13 12:08:36
+ * @LastEditTime: 2023-11-13 14:00:24
  * @FilePath: /openai-translate/main.go
  * @Telegram: https://t.me/missuo
  * @GitHub: https://github.com/missuo
- * 
- * Copyright © 2023 by Vincent, All Rights Reserved. 
+ *
+ * Copyright © 2023 by Vincent, All Rights Reserved.
  */
 package main
 
 import (
-    "context"
-    "net/http"
-    openai "github.com/sashabaranov/go-openai"
+	"context"
+	"flag"
+	"fmt"
+	"net/http"
+	"os"
+
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
-	"flag"
-	"os"
-	"fmt"
+	openai "github.com/sashabaranov/go-openai"
 )
 
 type ResData struct {
@@ -28,33 +29,33 @@ type ResData struct {
 	TargetLang string `json:"target_lang"`
 }
 
-func translator(apiKey string, targetLang string, transText string)(string, error) {
-    c := openai.NewClient(apiKey)
-    resp, err := c.CreateChatCompletion(
-        context.Background(),
-        openai.ChatCompletionRequest{
-            Model: openai.GPT3Dot5Turbo,
-            Messages: []openai.ChatCompletionMessage{
-                {
-                    Role:    openai.ChatMessageRoleSystem,
-                    Content: "You're a translator. Translate to " + targetLang + ".",
-                },
+func translator(apiKey string, targetLang string, transText string) (string, error) {
+	c := openai.NewClient(apiKey)
+	resp, err := c.CreateChatCompletion(
+		context.Background(),
+		openai.ChatCompletionRequest{
+			Model: openai.GPT3Dot5Turbo,
+			Messages: []openai.ChatCompletionMessage{
 				{
-                    Role:    openai.ChatMessageRoleUser,
-                    Content: transText,
-                },
-            },
-        },
-    )
+					Role:    openai.ChatMessageRoleSystem,
+					Content: "You're a translator. Translate to " + targetLang + ".",
+				},
+				{
+					Role:    openai.ChatMessageRoleUser,
+					Content: transText,
+				},
+			},
+		},
+	)
 
-    if err != nil {
-        return "", err
-    }
+	if err != nil {
+		return "", err
+	}
 
-    return resp.Choices[0].Message.Content, nil
+	return resp.Choices[0].Message.Content, nil
 }
 
-func main(){
+func main() {
 	// Define a command line flag
 	apiKeyFlag := flag.String("apiKey", "", "API key for OpenAI")
 	flag.Parse()
@@ -93,7 +94,7 @@ func main(){
 		targetLang := req.TargetLang
 		translateText := req.TransText
 		targetText, _ := translator(apiKey, targetLang, translateText)
-		
+
 		if targetText == "" {
 			c.JSON(http.StatusTooManyRequests, gin.H{ // 429 Too Many Requests
 				"code":    http.StatusTooManyRequests,
@@ -103,10 +104,10 @@ func main(){
 		}
 
 		c.JSON(http.StatusOK, gin.H{
-			"code":         http.StatusOK,
-			"data":         targetText,
-			"source_lang":  sourceLang,
-			"target_lang":  targetLang,
+			"code":        http.StatusOK,
+			"data":        targetText,
+			"source_lang": sourceLang,
+			"target_lang": targetLang,
 		})
 
 	})
