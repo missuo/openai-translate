@@ -33,3 +33,13 @@ jobs:
       with:
         name: openai-translate-${{ matrix.goos }}-${{ matrix.goarch }}
         path: openai-translate-${{ matrix.goos }}-${{ matrix.goarch }}
+  
+    - name: Upload Artifact to Release
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ github.event.release.upload_url }}
+        asset_path: ./openai-translate-${{ matrix.goos }}-${{ matrix.goarch }}
+        asset_name: openai-translate-${{ matrix.goos }}-${{ matrix.goarch }}
+        asset_content_type: application/octet-stream
