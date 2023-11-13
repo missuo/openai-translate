@@ -1,0 +1,10 @@
+version: '3'
+
+services:
+  openai-translate:
+    image: ghcr.io/missuo/openai-translate:latest
+    restart: always
+    ports:
+      - "23333:23333"
+    environment:
+      - OPENAI_KEY=YOUR_API_KEY
