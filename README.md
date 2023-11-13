@@ -5,6 +5,7 @@
 [![GitHub License][5]](https://github.com/missuo/openai-translate/blob/main/LICENSE)
 [![Docker Pulls][6]](https://hub.docker.com/r/missuo/deeplx)
 [![Releases][7]](https://github.com/missuo/openai-translate/releases)
+[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2Fmissuo%2Fopenai-translate.svg?type=shield)](https://app.fossa.com/projects/git%2Bgithub.com%2Fmissuo%2Fopenai-translate?ref=badge_shield)
 
 [1]: https://img.shields.io/github/actions/workflow/status/missuo/openai-translate/ci.yml?logo=github
 [2]: https://img.shields.io/github/go-mod/go-version/missuo/openai-translate?logo=go
@@ -71,3 +72,7 @@ r = httpx.post(url = deeplx_api, data = post_data).text
 print(r)
 ```
 
+
+
+## License
+[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2Fmissuo%2Fopenai-translate.svg?type=large)](https://app.fossa.com/projects/git%2Bgithub.com%2Fmissuo%2Fopenai-translate?ref=badge_large)
