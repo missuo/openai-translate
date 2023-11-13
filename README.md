@@ -39,7 +39,7 @@
 ```bash
 mkdir openai-translate && cd openai-translate
 wget https://raw.githubusercontent.com/missuo/openai-translate/main/compose.yaml
-nano compose.yaml # Modify to YOUR_API_KEY
+nano compose.yaml # Modify OPENAI_KEY
 docker compose up -d
 ```
 
@@ -72,7 +72,10 @@ r = httpx.post(url = openai_api, data = post_data).text
 print(r)
 ```
 
-
+## TODO
+- Support GPT-4, GPT-4-Turbo
+- Support set access token
+- Maximum request per second limit
 
 ## License
 [![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2Fmissuo%2Fopenai-translate.svg?type=large)](https://app.fossa.com/projects/git%2Bgithub.com%2Fmissuo%2Fopenai-translate?ref=badge_large)
