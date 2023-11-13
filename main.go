@@ -2,7 +2,7 @@
  * @Author: Vincent Young
  * @Date: 2023-11-13 11:16:26
  * @LastEditors: Vincent Young
- * @LastEditTime: 2023-11-13 11:54:51
+ * @LastEditTime: 2023-11-13 12:08:36
  * @FilePath: /openai-translate/main.go
  * @Telegram: https://t.me/missuo
  * @GitHub: https://github.com/missuo
@@ -72,6 +72,9 @@ func main(){
 		fmt.Println("Error: No API key provided. Set the apiKey flag or the OPENAI_KEY environment variable.")
 		os.Exit(1)
 	}
+
+	fmt.Println("Starting server on port 23333. Made by Vincent.")
+
 	gin.SetMode(gin.ReleaseMode)
 	r := gin.Default()
 	r.Use(cors.Default())
