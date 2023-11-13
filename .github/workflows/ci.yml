@@ -1,0 +1,35 @@
+name: release
+
+on:
+  release:
+    types: [created]
+
+jobs:
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        goos: [linux, windows, darwin]
+        goarch: [amd64, arm64]
+    steps:
+    - name: Set up Go
+      uses: actions/setup-go@v2
+      with:
+        go-version: '1.21'
+
+    - name: Check out code
+      uses: actions/checkout@v2
+
+    - name: Build
+      env:
+        GOOS: ${{ matrix.goos }}
+        GOARCH: ${{ matrix.goarch }}
+      run: |
+        go build -v -o openai-translate-${{ matrix.goos }}-${{ matrix.goarch }}
+
+    - name: Upload Artifacts
+      uses: actions/upload-artifact@v2
+      with:
+        name: openai-translate-${{ matrix.goos }}-${{ matrix.goarch }}
+        path: openai-translate-${{ matrix.goos }}-${{ matrix.goarch }}
