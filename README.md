@@ -6,7 +6,7 @@
 [![Docker Pulls][6]](https://hub.docker.com/r/missuo/deeplx)
 [![Releases][7]](https://github.com/missuo/openai-translate/releases)
 
-[1]: https://img.shields.io/github/actions/workflow/status/missuo/openai-translate/build.yml?logo=github
+[1]: https://img.shields.io/github/actions/workflow/status/missuo/openai-translate/ci.yml?logo=github
 [2]: https://img.shields.io/github/go-mod/go-version/missuo/openai-translate?logo=go
 [3]: https://goreportcard.com/badge/github.com/missuo/openai-translate
 [4]: https://api.codeclimate.com/v1/badges/b5b30239174fc6603aca/maintainability
