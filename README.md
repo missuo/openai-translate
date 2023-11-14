@@ -45,10 +45,9 @@ docker compose up -d
 
 ### Docker
 ```bash
+# ghcr.io
 docker run -itd -p 23333:23333 -e OPENAI_KEY=YOUR_API_KEY ghcr.io/missuo/openai-translate:latest
-```
-or
-```bash
+# dockerhub
 docker run -itd -p 23333:23333 -e OPENAI_KEY=YOUR_API_KEY missuo/openai-translate:latest
 ```
 
