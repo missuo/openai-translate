@@ -47,6 +47,11 @@ docker compose up -d
 ```bash
 docker run -itd -p 23333:23333 -e OPENAI_KEY=YOUR_API_KEY ghcr.io/missuo/openai-translate:latest
 ```
+or
+```bash
+docker run -itd -p 23333:23333 -e OPENAI_KEY=YOUR_API_KEY missuo/openai-translate:latest
+```
+
 ### Setup on [Bob App](https://bobtranslate.com/)
 > [!IMPORTANT]  
 > **This project is fully compatible with the bob-plugin-deeplx plugin.**
