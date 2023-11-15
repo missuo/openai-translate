@@ -2,7 +2,7 @@
  * @Author: Vincent Young
  * @Date: 2023-11-13 11:16:26
  * @LastEditors: Vincent Young
- * @LastEditTime: 2023-11-15 14:57:22
+ * @LastEditTime: 2023-11-15 17:10:45
  * @FilePath: /openai-translate/main.go
  * @Telegram: https://t.me/missuo
  * @GitHub: https://github.com/missuo
@@ -39,7 +39,6 @@ func tokenCount(text string) (int, error) {
 	token := len(tkm.Encode(text, nil, nil))
 	return token, nil
 }
-
 
 func translator(apiKey string, targetLang string, transText string) (string, error) {
 	c := openai.NewClient(apiKey)
@@ -106,7 +105,7 @@ func main() {
 		targetLang := req.TargetLang
 		translateText := req.TransText
 		targetText, _ := translator(apiKey, targetLang, translateText)
-		
+
 		if targetText == "" {
 			c.JSON(http.StatusTooManyRequests, gin.H{ // 429 Too Many Requests
 				"code":    http.StatusTooManyRequests,
@@ -116,6 +115,7 @@ func main() {
 		}
 
 		importToken, _ := tokenCount(translateText)
+		importToken += 9 // 9 token for the prompt
 		exportToken, _ := tokenCount(targetText)
 		tokenConsumed := importToken + exportToken
 		cost := float64(importToken)*0.0000010 + float64(exportToken)*0.0000020
