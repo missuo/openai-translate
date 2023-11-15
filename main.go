@@ -2,7 +2,7 @@
  * @Author: Vincent Young
  * @Date: 2023-11-13 11:16:26
  * @LastEditors: Vincent Young
- * @LastEditTime: 2023-11-13 14:00:24
+ * @LastEditTime: 2023-11-15 14:57:22
  * @FilePath: /openai-translate/main.go
  * @Telegram: https://t.me/missuo
  * @GitHub: https://github.com/missuo
@@ -20,6 +20,7 @@ import (
 
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
+	"github.com/pkoukk/tiktoken-go"
 	openai "github.com/sashabaranov/go-openai"
 )
 
@@ -28,6 +29,17 @@ type ResData struct {
 	SourceLang string `json:"source_lang"`
 	TargetLang string `json:"target_lang"`
 }
+
+func tokenCount(text string) (int, error) {
+	tkm, err := tiktoken.EncodingForModel("gpt-3.5-turbo")
+	if err != nil {
+		err = fmt.Errorf("getEncoding: %v", err)
+		return 0, err
+	}
+	token := len(tkm.Encode(text, nil, nil))
+	return token, nil
+}
+
 
 func translator(apiKey string, targetLang string, transText string) (string, error) {
 	c := openai.NewClient(apiKey)
@@ -94,7 +106,7 @@ func main() {
 		targetLang := req.TargetLang
 		translateText := req.TransText
 		targetText, _ := translator(apiKey, targetLang, translateText)
-
+		
 		if targetText == "" {
 			c.JSON(http.StatusTooManyRequests, gin.H{ // 429 Too Many Requests
 				"code":    http.StatusTooManyRequests,
@@ -103,11 +115,18 @@ func main() {
 			return
 		}
 
+		importToken, _ := tokenCount(translateText)
+		exportToken, _ := tokenCount(targetText)
+		tokenConsumed := importToken + exportToken
+		cost := float64(importToken)*0.0000010 + float64(exportToken)*0.0000020
+
 		c.JSON(http.StatusOK, gin.H{
-			"code":        http.StatusOK,
-			"data":        targetText,
-			"source_lang": sourceLang,
-			"target_lang": targetLang,
+			"code":           http.StatusOK,
+			"data":           targetText,
+			"source_lang":    sourceLang,
+			"target_lang":    targetLang,
+			"token_consumed": tokenConsumed,
+			"cost":           cost,
 		})
 
 	})
