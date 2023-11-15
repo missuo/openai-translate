@@ -30,9 +30,11 @@
 ```json
 {
   "code": 200,
-  "data": "Hello, Britain!",
+  "cost": 0.000013,
+  "data": "Hello world.",
   "source_lang": "ZH",
-  "target_lang": "EN"
+  "target_lang": "EN",
+  "token_consumed": 10
 }
 ```
 ### Docker Compose
