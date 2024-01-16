@@ -2,7 +2,7 @@
  * @Author: Vincent Young
  * @Date: 2023-11-13 11:16:26
  * @LastEditors: Vincent Young
- * @LastEditTime: 2023-11-15 17:10:45
+ * @LastEditTime: 2024-01-16 15:27:45
  * @FilePath: /openai-translate/main.go
  * @Telegram: https://t.me/missuo
  * @GitHub: https://github.com/missuo
@@ -40,12 +40,16 @@ func tokenCount(text string) (int, error) {
 	return token, nil
 }
 
-func translator(apiKey string, targetLang string, transText string) (string, error) {
-	c := openai.NewClient(apiKey)
+func translator(apiKey string, targetLang string, transText string, baseUrl string) (string, error) {
+	config := openai.DefaultConfig(apiKey)
+	config.BaseURL = baseUrl
+	c := openai.NewClientWithConfig(config)
+	// c := openai.NewClient(apiKey)
 	resp, err := c.CreateChatCompletion(
 		context.Background(),
 		openai.ChatCompletionRequest{
-			Model: openai.GPT3Dot5Turbo,
+			// Model: openai.GPT3Dot5Turbo,
+			Model: openai.GPT4,
 			Messages: []openai.ChatCompletionMessage{
 				{
 					Role:    openai.ChatMessageRoleSystem,
@@ -69,15 +73,37 @@ func translator(apiKey string, targetLang string, transText string) (string, err
 func main() {
 	// Define a command line flag
 	apiKeyFlag := flag.String("apiKey", "", "API key for OpenAI")
+	baseUrlFlag := flag.String("baseUrl", "", "Base URL, default is https://api.openai.com/v1")
+	// modelFlag := flag.String("model", "", "Model to use, default is gpt-3.5-turbo")
 	flag.Parse()
 
 	// First try to get the API key from the command line flag
 	apiKey := *apiKeyFlag
+	baseUrl := *baseUrlFlag
+	// model := *modelFlag
 
 	// If it's not provided, try to get it from the environment variable
 	if apiKey == "" {
 		apiKey = os.Getenv("OPENAI_KEY")
 	}
+
+	if baseUrl == "" {
+		if os.Getenv("BASE_URL") != "" {
+			baseUrl = os.Getenv("BASE_URL")
+		} else {
+			baseUrl = "https://api.openai.com/v1"
+		}
+	}
+
+	// if model == "" {
+	// 	if os.Getenv("MODEL") != "" {
+	// 		model = os.Getenv("MODEL")
+	// 	} else {
+	// 		model = "gpt-3.5-turbo"
+	// 	}
+	// }
+
+	// fmt.Printf(model)
 
 	// If the API key is still empty, return an error and exit
 	if apiKey == "" {
@@ -104,7 +130,7 @@ func main() {
 		sourceLang := req.SourceLang
 		targetLang := req.TargetLang
 		translateText := req.TransText
-		targetText, _ := translator(apiKey, targetLang, translateText)
+		targetText, _ := translator(apiKey, targetLang, translateText, baseUrl)
 
 		if targetText == "" {
 			c.JSON(http.StatusTooManyRequests, gin.H{ // 429 Too Many Requests
