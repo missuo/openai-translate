@@ -31,7 +31,7 @@ type ResData struct {
 }
 
 func tokenCount(text string) (int, error) {
-	tkm, err := tiktoken.EncodingForModel("gpt-3.5-turbo")
+	tkm, err := tiktoken.EncodingForModel("gpt-4")
 	if err != nil {
 		err = fmt.Errorf("getEncoding: %v", err)
 		return 0, err
