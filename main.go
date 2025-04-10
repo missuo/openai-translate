@@ -1,8 +1,8 @@
 /*
  * @Author: Vincent Young
  * @Date: 2023-11-13 11:16:26
- * @LastEditors: Vincent Young
- * @LastEditTime: 2024-01-16 15:27:45
+ * @LastEditors: Vincent Yang
+ * @LastEditTime: 2025-04-10 08:37:58
  * @FilePath: /openai-translate/main.go
  * @Telegram: https://t.me/missuo
  * @GitHub: https://github.com/missuo
@@ -17,7 +17,9 @@ import (
 	"fmt"
 	"net/http"
 	"os"
+	"strings"
 
+	"github.com/abadojack/whatlanggo"
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 	"github.com/pkoukk/tiktoken-go"
@@ -31,7 +33,7 @@ type ResData struct {
 }
 
 func tokenCount(text string) (int, error) {
-	tkm, err := tiktoken.EncodingForModel("gpt-4")
+	tkm, err := tiktoken.EncodingForModel("gpt-4o")
 	if err != nil {
 		err = fmt.Errorf("getEncoding: %v", err)
 		return 0, err
@@ -49,11 +51,11 @@ func translator(apiKey string, targetLang string, transText string, baseUrl stri
 		context.Background(),
 		openai.ChatCompletionRequest{
 			// Model: openai.GPT3Dot5Turbo,
-			Model: openai.GPT4,
+			Model: "gpt-4o",
 			Messages: []openai.ChatCompletionMessage{
 				{
 					Role:    openai.ChatMessageRoleSystem,
-					Content: "You're a translator. Translate to " + targetLang + ".",
+					Content: "You're a translator. Translate to " + targetLang + ". Please note not to have any unnecessary explanations, just return the translated text directly.",
 				},
 				{
 					Role:    openai.ChatMessageRoleUser,
@@ -140,11 +142,15 @@ func main() {
 			return
 		}
 
+		// if sourceLang is empty, detect the language
+		if sourceLang == "" {
+			sourceLang = strings.ToUpper(whatlanggo.DetectLang(req.TransText).Iso6391())
+		}
+
 		importToken, _ := tokenCount(translateText)
 		importToken += 9 // 9 token for the prompt
 		exportToken, _ := tokenCount(targetText)
 		tokenConsumed := importToken + exportToken
-		cost := float64(importToken)*0.0000010 + float64(exportToken)*0.0000020
 
 		c.JSON(http.StatusOK, gin.H{
 			"code":           http.StatusOK,
@@ -152,7 +158,6 @@ func main() {
 			"source_lang":    sourceLang,
 			"target_lang":    targetLang,
 			"token_consumed": tokenConsumed,
-			"cost":           cost,
 		})
 
 	})

@@ -1,8 +1,9 @@
 module github.com/missuo/openai-translate
 
-go 1.21
+go 1.23
 
 require (
+	github.com/abadojack/whatlanggo v1.0.1
 	github.com/gin-contrib/cors v1.4.0
 	github.com/gin-gonic/gin v1.9.1
 	github.com/pkoukk/tiktoken-go v0.1.6
